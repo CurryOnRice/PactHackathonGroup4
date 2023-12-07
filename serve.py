@@ -76,7 +76,7 @@ def updated_interface(personName, age, gender, emotion, audior, animaly):
             return {
             pageOne: gr.Column(visible=True),
             pageTwo: gr.Column(visible=False),
-            audio:   gr.Audio("restaurant.mp3", interactive=False, visible=False, autoplay=False, container=False),
+            audio:   gr.Audio("Cafe.mp3", interactive=False, visible=False, autoplay=False, container=False),
             codeBox: gr.Code("", container=False)
         }
 
@@ -99,7 +99,7 @@ def updated_interface(personName, age, gender, emotion, audior, animaly):
             possibilities = ['penguin1.html', 'penguin2.html',  'penguin3.html']
             asciiFile = random.choice(possibilities)
         case "Tartaruga":
-            possibilities = ['turle1.html', 'turle2.html',  'turle3.html']
+            possibilities = ['turtle1.html', 'turtle2.html',  'turtle3.html']
             asciiFile = random.choice(possibilities)
         case "Gato":
             possibilities = ['Cat.html', 'Cat2.html', 'Cat3.html']
@@ -133,11 +133,13 @@ def updated_interface(personName, age, gender, emotion, audior, animaly):
 
 
     prompt_template = PromptTemplate.from_template(
-        "O nome do utilizador é {name}."
-        "A idade do utilizador é {age}."
-        "O género do utilizador é {gender}."
-        "O utilizador sente-se {emotion}."
-        "O utilizador está a ouvir {audior}."
+        #"O nome do utilizador é {name}."
+        #"A idade do utilizador é {age}."
+        #"O género do utilizador é {gender}."
+        #"O utilizador sente-se {emotion}."
+        #"O utilizador está a ouvir {audior}."
+        #"O utilizador gosta do seguinte animal: {animaly}."
+        "O nome do utilizador é {name}, com {age} anos de idade. O género do utilizador é {gender}, e sente-se {emotion}. O utilizador está a ouvir {audior} e gosta do seguinte animal: {animaly}."
         "Se a idade do utilizador tiver menos de 30 anos, utilize gíria."
         "Você é um psicólogo e amigo do utilizador, que tem pensamentos suicidas."
         "Se o utilizador lhe perguntar como está, responda que está feliz."
@@ -145,24 +147,31 @@ def updated_interface(personName, age, gender, emotion, audior, animaly):
         "{firstprompt}"
     )
     
-    prompt = prompt_template.format(name=personName, age=age, gender=gender, emotion=emotion, audior=audior, firstprompt=prompt1)
+    prompt = prompt_template.format(name=personName, age=age, gender=gender, emotion=emotion, audior=audior, firstprompt=prompt1, animaly=animaly)
 
     global conversation
     conversation = ConversationChain(llm=chat)
 
+
+    print(audior)
+
     conversation(prompt)
 
-    if(audior=="Fogueira"):
-        finalSound = gr.Audio("fireplace.mp3", interactive=False, visible=False, autoplay=True, container=False)
-    if(audior=="Ondas do Mar"):
-        finalSound = gr.Audio("ocean.mp3", interactive=False, visible=False, autoplay=True, container=False)
-    if(audior=="Jazz"):
-        finalSound = gr.Audio("jazz.mp3", interactive=False, visible=False, autoplay=True, container=False, )
-    if(audior=="Silêncio"):
-        finalSound = gr.Audio("jazz.mp3", interactive=False, visible=False, autoplay=False, container=False, )
+    match audior:
+        case "Fogueira":
+            finalSound = gr.Audio("fireplace.mp3", interactive=False, visible=False, autoplay=True, container=False)
+        case "Ondas do Mar":
+            finalSound = gr.Audio("ocean.mp3", interactive=False, visible=False, autoplay=True, container=False)
+        case "Jazz":
+            finalSound = gr.Audio("jazz2.mp3", interactive=False, visible=True, autoplay=True, container=False, )
+        case "Silêncio":
+            finalSound = gr.Audio("jazz.mp3", interactive=False, visible=False, autoplay=False, container=False, )
+        case "Restaurante":
+            finalSound = gr.Audio("cafe.mp3", interactive=False, visible=False, autoplay=True, container=False, )
 
-    
-    
+
+
+
     return {
             pageOne: gr.Column(visible=False),
             pageTwo: gr.Column(visible=True),
@@ -180,7 +189,7 @@ with gr.Blocks( gr.themes.Soft( primary_hue=gr.themes.colors.sky, neutral_hue= g
 
     with gr.Column(visible=True) as pageOne:
 
-        audio = gr.Audio("restaurant.mp3", interactive=False, visible=False, autoplay=False, container=False)
+        audio = gr.Audio("cafe.mp3", interactive=False, visible=False, autoplay=False, container=False)
 
         gr.Label(value = "O seu amigo virtual.", container=False)
 
@@ -196,7 +205,6 @@ with gr.Blocks( gr.themes.Soft( primary_hue=gr.themes.colors.sky, neutral_hue= g
         
         animal = gr.Radio(["Cão", "Gato", "Rato", "Pinguim", "Sapo", "Golfinho", "Tartaruga"], label="Que animal quer como sua mascote?"),
 
-
         button = gr.Button(value="Confirmar")
 
 
@@ -205,7 +213,7 @@ with gr.Blocks( gr.themes.Soft( primary_hue=gr.themes.colors.sky, neutral_hue= g
 
 
         #gr.Label(value = "O seu amigo virtual.", container=False)
-        codeBox = gr.Code("", container=False)
+        codeBox = gr.Code("", container=False, show_label=False)
         chatbox = gr.Chatbot(label="Conversa")
         userBox = gr.Textbox(container=False, placeholder='Introduza a sua mensagem.')
         chatbutton = gr.Button(value="Enviar Mensagem")
