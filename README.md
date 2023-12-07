@@ -8,4 +8,5 @@ Uma grande fracção dos indivíduos com proclividade a pensamentos de suicídio
 # Solução Proposta
 
 A nossa solução propõe criar um chatbot específicamente detalhado ao utilizador. Pensamos no utilizador como indíviduo, com as suas preferências, e com os seus problemas particulares que o levem a ponderar o suicídio. Através de um pequeno questionário antes do início da conversa, conseguimos profilar o utilizador, e construir um chatbot específico às suas necessidades.
-O chatbot atua como um psicólogo e amigo pessoal, que encoraja os feitos do utilizador, e o motiva nos seus momentos de tristeza.
+O chatbot atua como um psicólogo e amigo pessoal, que encoraja os feitos do utilizador, e o motiva nos seus momentos de tristeza. 
+Com o nosso trabalho, pretendemos dar ajuda a qualquer pessoa, seja quem for, quais forem os problemas que enfrenta, ou a fase da vida na qual se encontra.
