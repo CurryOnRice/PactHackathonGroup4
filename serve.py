@@ -13,10 +13,8 @@ from langchain.schema import HumanMessage, SystemMessage
 from langchain.chains import ConversationChain
 import gradio as gr
 from langchain.prompts import PromptTemplate
-
-
-
-
+from bs4 import BeautifulSoup
+import random
 
 
 load_dotenv()
@@ -72,16 +70,46 @@ def returnString(emotion):
     return prompt1
 
 
-def updated_interface(personName, age, gender, emotion, audior):
+def updated_interface(personName, age, gender, emotion, audior, animaly):
 
-    if(personName=="" or age==None or gender==None or emotion==None or audior==None):
+    if(personName=="" or age==None or gender==None or emotion==None or audior==None or animaly==None):
             return {
             pageOne: gr.Column(visible=True),
             pageTwo: gr.Column(visible=False),
-            audio:   gr.Audio("restaurant.mp3", interactive=False, visible=False, autoplay=False, container=False)
-,
+            audio:   gr.Audio("restaurant.mp3", interactive=False, visible=False, autoplay=False, container=False),
+            codeBox: gr.Code("", container=False)
         }
 
+    asciiFile = ""
+
+    match animaly:
+        case "Sapo":
+            possibilities = ['frog1.html', 'frog2.html', 'frog3.html']
+            asciiFile = random.choice(possibilities)
+        case "Cão":
+            possibilities = ['Dog.html', 'Dog2.html', 'Dog3.html']
+            asciiFile = random.choice(possibilities)
+        case "Golfinho":
+            possibilities = ['Dolphin.html', 'Dolphin2.html', 'Dolphin3.html']
+            asciiFile = random.choice(possibilities)
+        case "Pinguim":
+            possibilities = ['penguin1.html', 'penguin2.html',  'penguin3.html']
+            asciiFile = random.choice(possibilities)
+        case "Rato":
+            possibilities = ['penguin1.html', 'penguin2.html',  'penguin3.html']
+            asciiFile = random.choice(possibilities)
+        case "Tartaruga":
+            possibilities = ['turle1.html', 'turle2.html',  'turle3.html']
+            asciiFile = random.choice(possibilities)
+        case "Gato":
+            possibilities = ['Cat.html', 'Cat2.html', 'Cat3.html']
+            asciiFile = random.choice(possibilities)
+
+
+
+
+    link = open(asciiFile)
+    soup = BeautifulSoup(link, "html.parser")
 
 
     prompt1 = ""
@@ -139,19 +167,17 @@ def updated_interface(personName, age, gender, emotion, audior):
             pageOne: gr.Column(visible=False),
             pageTwo: gr.Column(visible=True),
             audio: finalSound,
+            codeBox: gr.Code(soup.get_text('\n'), container=False)
         }
 
 
 
 
-css = """
-#buttonred {color: red;}
-.feedback textarea {font-size: 24px !important}
-"""
+css = "footer {visibility: hidden}"
 
 #css=".gradio-container {background-color: #ffffff}"
-with gr.Blocks(theme=gr.themes.Soft()) as demo:
-    
+with gr.Blocks( gr.themes.Soft( primary_hue=gr.themes.colors.sky, neutral_hue= gr.themes.colors.slate  ), css=css ) as demo:
+
     with gr.Column(visible=True) as pageOne:
 
         audio = gr.Audio("restaurant.mp3", interactive=False, visible=False, autoplay=False, container=False)
@@ -167,19 +193,27 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
         color = gr.Radio(["Feliz", "Calmo", "Confiante", "Zangado", "Triste", "Perturbado", "Não sei"], label="Como se sente?"),
 
         som = gr.Radio(["Silêncio", "Fogueira", "Ondas do Mar", "Jazz"], label="Qual o som que mais o relaxa?"),
+        
+        animal = gr.Radio(["Cão", "Gato", "Rato", "Pinguim", "Sapo", "Golfinho", "Tartaruga"], label="Que animal quer como sua mascote?"),
 
 
         button = gr.Button(value="Confirmar")
 
 
+
     with gr.Column(visible=False) as pageTwo:
-        gr.Label(value = "O seu amigo virtual.", container=False)
+
+
+        #gr.Label(value = "O seu amigo virtual.", container=False)
+        codeBox = gr.Code("", container=False)
         chatbox = gr.Chatbot(label="Conversa")
         userBox = gr.Textbox(container=False, placeholder='Introduza a sua mensagem.')
         chatbutton = gr.Button(value="Enviar Mensagem")
         
 
-    button.click(updated_interface, inputs=[personName, age, gender[0], color[0], som[0]], outputs=[pageOne, pageTwo, audio],)
+
+
+    button.click(updated_interface, inputs=[personName, age, gender[0], color[0], som[0], animal[0]], outputs=[pageOne, pageTwo, audio, codeBox],)
     chatbutton.click(chatButtonPressed, inputs = [userBox, chatbox], outputs = [userBox, chatbox])
 
 
